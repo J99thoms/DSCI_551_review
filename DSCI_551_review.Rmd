@@ -49,6 +49,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Lecture 1
 
+### Basic probability concepts: 
+
 In general, the probability of an event $A$ occurring is denoted as $P(A)$ and is defined as\[
   P(A) = \frac{\text{Number of times event $A$ is observed}}{\text{Total number of events observed}}
 \]
@@ -82,12 +84,15 @@ p = \frac{o}{o+1}.
 \]
 
 
+
+### Measures of central tendency and uncertainty:
+
 **Central tendency:** a measure denoting a “typical” value in a random variable.
 
 **Uncertainty:**a measure of how “spread” a random variable is
 
-- Called *parameters** when it comes to a population
-- Are estimated via *sample statistics**
+- Called **parameters** when it comes to a population
+- Are estimated via **sample statistics**
 
 **Mode:** the outcome having the highest probability.
 
@@ -120,7 +125,7 @@ H(X) = \int_x f_X(x) \ln \left(\rcp{f_X(x)}\right) \text{d}x.
 \[\implies \text{Var}(X) = \mathbb{E}(X^2) - [\mathbb{E}(X)]^2.\]
 
 - the variance is an expectation (specifically, the squared deviation from the mean)
-- can usually be estimated via the *sample variance**\[
+- can usually be estimated via the **sample variance**\[
 S^2 = \frac{1}{n-1} \sum_{i=1}^n (X_i - \bar{X})^2\]
 - Always non-negative, and $\var(X) = 0 \iff X \text{ is constant}$
 
@@ -159,9 +164,9 @@ S^2 = \frac{1}{n-1} \sum_{i=1}^n (X_i - \bar{X})^2\]
 
 ### Families and Parameters:
 
-- We refer to the entire set of Binomial probability distributions as the *Binomial family of distributions**.
+- We refer to the entire set of Binomial probability distributions as the **Binomial family of distributions**.
 - Specifying a value for both  $\pi$  and  $n$  results in a unique Binomial distribution.
-- Since  $\pi$  and  $n$  fully specify a Binomial distribution, we call them *parameters** of the Binomial family, and we call the Binomial family a *parametric family** of distributions.
+- Since  $\pi$  and  $n$  fully specify a Binomial distribution, we call them **parameters** of the Binomial family, and we call the Binomial family a **parametric family** of distributions.
 - There are other ways we can specify the distribution. For instance, specifying the mean and variance is enough to identify a Binomial distribution.
 - Exactly which variables we decide to use to identify a distribution within a family is called the family’s parameterization.
 - The parameterization you use in practice will depend on the information you can more easily obtain
@@ -237,4 +242,124 @@ P(X = x \mid \pi) = \pi^x (1 - \pi)^{1 - x} \quad \text{for} \quad x = 0, 1.\]
 
 
 
+
+
+
+\newpage 
+
+## Lecture 3
+
+
+### Joint distributions and marginal distributions: 
+ 
+- A **joint distribution** is the distribution of $n$-tuples of random variables, where $n\geq 2$.
+- The distribution of an individual variable is called the **marginal distribution** (sometimes just “marginal” or “margin”).
+- The word “marginal” is not really needed when we are talking about a standalone random variable – there is no difference between the “marginal distribution of $X$” and the “distribution of $X$.” Therefore, we just use the word “marginal” to emphasize that the distribution is being considered in isolation from other related variables in the same process or system.
+
+
+- Going from the initial marginal distributions to the joint distribution is not a straightforward procedure.
+- It requires us to understand the dependency structure among the random variables
+- If we assume that all the RVs are independent, then we can just multiply the probabilities from the marginal distributions to find the joint distribution
+
+- If you have a joint distribution, then the marginal distribution of each individual variable follows as a consequence
+- Just sum up (discrete) or integrate (continuous), and apply the law of total probability: \[
+  P(A) = \sum_nP(A\cap B_n),
+\]or\[
+  P(A) = \int_yP(A\cap Y = y).
+\]
+
+
+
+### Independence: 
+- $X$ and $Y$ are **independent** if 
+\[
+P(X = x \cap Y = y) = P(X = x) \cdot P(Y = y) \quad \forall_{x,y}
+\]
+
+- Equivalently: \[
+P(X = x \mid Y = y) = P(X = x)  \quad \forall_{x,y}
+\]
+
+- In other words: $X$  and $Y$ are independent if knowing something about one of them tells us nothing about the other. 
+
+
+
+### Dependence Measures:
+
+**Covariance:** \[
+\cov(X, Y) = \mathbb{E}[(X-\mu_X)(Y-\mu_Y)], 
+\]
+where $\mu_X = \mathbb{E}(X)$ and $\mu_Y = \mathbb{E}(Y)$.
+\[
+  \implies \operatorname{Cov}(X,Y) = \mathbb{E}(XY) - \mathbb{E}(X)\mathbb{E}(Y).
+\]
+
+- Note that \[
+  \mathbb{E}(XY) = \mathbb{E}(X)\mathbb{E}(Y) \iff \cov(X,Y) = 0,
+\]
+
+- Also if $X$ and $Y$ are independent then $\cov(X,Y) = 0$.
+- But the reverse implication does **not** hold in general!
+- Zero covariance simply indicates that there is no **linear** trend 
+
+
+**Pearson’s correlation:**
+
+- $\cov(X,Y)$ is dependent on the scale of $X$ and $Y$. 
+- e.g. $\cov(10X, Y) = 10\cov(X, Y)$. 
+- Pearson's Correlation standardizes the scale according to the standard deviations of $X$ and $Y$: \begin{align*}
+\operatorname{Corr}(X, Y) &= \mathbb{E} \left[
+   \left(\frac{X-\mu_X}{\sigma_X}\right)
+   \left(\frac{Y-\mu_Y}{\sigma_Y}\right)
+\right] \\
+&= \frac{\operatorname{Cov}(X, Y)}{\sqrt{\operatorname{Var}(X)\operatorname{Var}(Y)}}.
+\end{align*}
+
+- Can show that $-1 \leq \text{Corr}(X, Y) \leq 1$ using the Cauchy–Schwarz inequality
+- a value of -1 implies a perfect negative linear relationship
+- a value of 0 implies no linear relationship (not necessarily independent tho)
+- a value of 1 implies a perfect linear relationship
+
+
+
+**Kendall's $\tau_K$**:
+
+- Another measure of correlation
+- Measures **monotonic** dependence instead of linear dependence
+- Used on samples of observations, not on entire known distributions
+- Measures concordance between each pair of observation $(x_i, y_i)$ and $(x_j, y_j)$ with $i \neq j$.
+- Concordant means
+\begin{gather*}
+x_i < x_j \quad \text{and} \quad y_i < y_j, \\
+\text{or} \\
+x_i > x_j \quad \text{and} \quad y_i > y_j;
+\end{gather*}
+
+- Discordant means
+\begin{gather*}
+x_i < x_j \quad \text{and} \quad y_i > y_j, \\
+\text{or} \\
+x_i > x_j \quad \text{and} \quad y_i < y_j;
+\end{gather*}
+
+- The formal definition is then\[
+\tau_K = \frac{\text{Number of concordant pairs} - \text{Number of discordant pairs}}{{n \choose 2}},\]
+where $n$ is the sample size.
+
+
+**Mutual Information:**
+
+- Defined as \[
+H(X,Y) = \displaystyle \sum_x \displaystyle \sum_y P(X = x \cap Y = y)\log\left[\frac{P(X = x \cap Y = y)}{P(X = x) \cdot P(Y = y)}\right].
+\]
+
+- Not really used in D551.
+- Apparently useful in Machine Learning.
+
+
+### Variance of a linear combination:
+
+\[
+\operatorname{Var}(aX + bY) = a^2\operatorname{Var}(X) + b^2\operatorname{Var}(Y) + 2ab\operatorname{Cov}(X, Y).
+\]
 
