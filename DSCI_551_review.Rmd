@@ -94,7 +94,7 @@ p = \frac{o}{o+1}.
 - Called **parameters** when it comes to a population
 - Are estimated via **sample statistics**
 
-**Mode:** the outcome having the highest probability.
+**Mode:** the outcome having the highest probability (discrete) or highest probability density (continuous)
 
 **Entropy:** a measure of uncertainty defined by \[
   H(X) = \sum_x P(X = x)\ln\left(\rcp{P(X = x)}\right)
@@ -362,4 +362,228 @@ H(X,Y) = \displaystyle \sum_x \displaystyle \sum_y P(X = x \cap Y = y)\log\left[
 \[
 \operatorname{Var}(aX + bY) = a^2\operatorname{Var}(X) + b^2\operatorname{Var}(Y) + 2ab\operatorname{Cov}(X, Y).
 \]
+
+
+
+
+\newpage 
+
+## Lecture 4
+
+### Conditional probabilities and conditional distributions
+
+- In general, for events $A$ and $B$, the conditional probability of $A$ given $B$ is\[
+P(A \mid B) = \frac{P(A \cap B)}{P(B)}.\]
+
+- If $X$ and $Y$ are two RVs, then $(X\mid Y=y)$ is a probability distribution
+\[\sum_xP(X_{_{Y = y}} = x) = \sum_xP(X = x\mid Y=y) =1. \]
+- And hence $Z = (X\mid Y=y)$ is also a random variable
+
+
+### Law of total expectation:
+
+- A marginal mean can be computed from the conditional means and the probabilities of the conditioning variable.
+- The formula, known as the **Law of Total Expectation**, is \begin{align*}
+\mathbb{E}_Y(Y) &= \sum_x \mathbb{E}_Y(Y \mid X = x) \cdot P(X = x)\\
+&= \mathbb{E}_X [\mathbb{E}_Y(Y \mid X)].
+\end{align*}
+
+- Also note that the law of total probability implies that \begin{align*}
+  P(Y = y) &= \sum_x P(Y = y \mid X = x) \cdot P(X = x)\\
+  &= \E_X[P(Y = y \mid X = x)].
+\end{align*}
+
+
+
+
+### Conditional Independence:
+
+- Note that even if $X$ and $Y$ are independent, they might not be independent when conditioning on some other RV $Z$. 
+- We say that $X$ and $Y$ are conditionally independent given $Z$ if and only if
+\[
+P(X = x \cap Y = y \mid Z = z) = P(X = x \mid Z = z) \cdot P(Y = y \mid Z = z) \quad \forall_{x,y,z}
+\]
+
+- Equivalently: \[
+P(X = x \mid Y = y,\ Z = z) = P(X = x \mid Z = z) \quad \forall_{x,y,z}
+\]
+
+
+#### Example of variables that are not independent but are conditionally independent:
+
+- See https://pages.github.ubc.ca/MDS-2022-23/DSCI_551_stat-prob-dsci_students/conditional-probabilities.html#conditional-independence
+
+- Let  $L$  be a student’s lab grade,  $Q$  be a student’s quiz grade, and $S$  represent whether the student is a Statistics major
+- For simplicity, we will consider only Bernoulli random variables, so  L  and  Q  will only take on the values “high” and “low”, and $S$ takes on the values of "yes" or "no".
+
+
+- $L$  and  $Q$  appear to have a mild positive correlation: when the lab grade is high, the quiz grade is a bit more likely to also be high.
+- So $L$ and $Q$ are not independent.
+- But $L$ and $Q$ are conditionally independent given $S$!!
+- Intuition: When $L$ is high, it indicates that the student is more likely to be a statistics major, which in turn indicates that their quiz grade $Q$ is more likely to be high. However, this is the **only** reason why high lab grades are correlated with high quiz grades. If you already know that a person is (or is not) a Statistics major, then their lab and quiz grades are completely independent.
+
+- Note that it is also possible to have the opposite case: two variables that are marginally independent, but not conditionally independent given a third variable.
+
+
+
+
+
+
+\newpage 
+
+## Lecture 5
+
+### Continuous random variables:
+
+- Continuous random variables have an uncountably infinite number of possible outcomes
+- In practice, we can never measure anything on a continuous scale since any measuring instrument must always round to some precision.
+- But we can use a continuous distribution if the quantity being measured has "enough" precision that the distance between two neighbouring measurements is "not a big deal".
+- For example, if dealing with monetary quantities which are in the magnitude of millions of dollars, rounding to the nearest cent is no big deal.
+
+
+### Probability Density:
+
+- Continuous RVs have an associated **probability density function** (PDF)
+- It measures the density of probability per unit. 
+- The density of a RV $X$ is denoted as  $f_X(x)$ 
+- In general, \[
+  P(a\leq X \leq b) =   \int_{a}^b f_X(x) \text{d}x 
+\]
+
+- By the law of total probability, we have \[\int_{-\infty}^\infty f_X(x) \text{d}x = 1.
+\]
+
+- Note that \[
+  P(X = a) =   \int_{a}^a f_X(x) \text{d}x = 0 \quad  \forall_a 
+\]
+
+- A PDF must be non-negative everywhere
+
+
+### Distribution properties:
+
+- See lecture 1 notes for definitions of mode, entropy, expectation, variance, and standard deviation.
+
+- Recall that entropy can be negative for continuous RVs.
+
+#### Median and Quantiles:
+
+- The **median** is the outcome for which there is a 50-50 chance of seeing a greater (or lesser) value.
+- By definition, \[P[X \leq \text{Median}(X)] = 0.5 = P[X \geq \text{Median}(X)].
+\]
+
+- Its empirical definition (i.e. the sample statistic version of median) is the "middle value" after sorting the observations from smallest to largest.
+
+- Better than the mean in some ways because it is not as sensitive to outliers and reduces possibilities to two equally likely outcomes. 
+
+
+
+- The **$p$-quantile**, denoted $Q_X(p)$, is the outcome with a probability $p$  of getting a smaller outcome. 
+- By definition, \[P[X \leq Q_X(p)] = p.
+\]
+
+- So the 0.5-quantile is just the median.
+- An empirically-based definition of the  $p$-quantile is the  $np$th largest (rounded up) observation in a sample of size  $n$.
+
+##### Special Quantiles:
+
+- The  0.25 ,  0.5 , and  0.75 -quantiles are called **quartiles**. 
+- Often referred to as the 1st, 2nd, and 3rd quartiles, and denoted as $Q_1, Q_2,$ and $Q_3$, respectively.
+
+\
+
+- The  0.01 ,  0.02 , …, and  0.99 -quantiles are called **percentiles**.
+- The  $p$-quantile will often be called the  $100p$th percentile; for example, the  40th percentile is the  0.4 -quantile, and the 97th percentile is the 0.97-quantile. 
+
+
+#### Prediction Intervals
+
+
+- A  $p\times 100$% prediction interval $[a,b]$ is such that \begin{align*}
+  P(a\leq X \leq b) &= p,\\
+  P(X \leq a) = \frac{1-p}{2},\\
+  P(X \geq b) = \frac{1-p}{2}.\\
+\end{align*}
+
+- Clearly $a = Q_{_X}(\frac{1-p}{2})$
+- Similarly, $b = Q_{_X}(1 - \frac{1-p}{2}) = Q_{_X}(\frac{1+p}{2})$ 
+
+
+
+#### Skewness
+
+- **Skewness** measures how “lopsided” a distribution is, as well as the direction of the skew.
+- If the density is symmetric, then the skewness is 0.
+- If the density is more “spread-out” towards the right/positive values, then the distribution is said to be right-skewed (positive skewness).
+- If the density is more “spread-out” towards the left/negative values, then the distribution is said to be left-skewed (negative skewness).
+
+![](img/skewness.png)
+
+
+- The mathematical definition is given by \[
+  \text{Skewness}(X) = \mathbb{E} \left[ \left( \frac{X - \mu_X}{\sigma_X} \right)^3 \right].
+\]
+
+
+
+### Representing Distributions: 
+
+- A PDF (or PMF) is just a representation of a distribution. It is not the distribution itself.
+- There are alternative ways to represent a distribution.
+- All of these representations capture everything about a distribution, meaning that if one of them is given, the other ones can be derived.
+
+
+#### Cumulative Distribution Function
+
+- The **cumulative distribution function** (CDF) is defined by \[
+  F_X(x) = P(X \leq x)
+\]
+
+- It can be calculated as \[
+F_X(x) = \int_{-\infty}^x f_X(t) \, \text{d}t.
+\]
+
+- It is unitless (because probability is unitless)
+
+- A valid CDF $F_X(x)$ must satisfy the following requirements:
+1. Must never decrease.
+2. It must never evaluate to be < 0 or > 1.
+3. $F_X(x) \rightarrow 0$ as $x \rightarrow -\infty$
+4. $F_X(x) \rightarrow 1$ as $x \rightarrow \infty$.
+
+
+#### Survival Function
+
+- The **survival function**  $S_X(x)$ is defined by
+\[
+S_X(x)=P(X>x).
+\]
+- It is the CDF “flipped upside down”:
+\[
+S_X(x)=1-F_X(x)
+\]
+
+
+
+#### Quantile Function
+
+- The **quantile function** takes a probability $p$ and maps it to the $p$-quantile.
+- Mathematically, this means that \[
+  Q(p) = F^{-1}(p).
+\]
+- The quantile function is the CDF with the axes swapped, or in other words, the CDF reflected diagonally.
+
+\
+
+
+- All these representations (PDF, CDF, survival function, quantile function) fully contain all the information about the distribution; they are different “views” of the same underlying random variable.
+
+
+
+\newpage 
+
+## Lecture 6
+
+
+
 
