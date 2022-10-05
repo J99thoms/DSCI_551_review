@@ -732,4 +732,176 @@ f_{X \mid X \geq a}(x) = \begin{cases} \frac{f_X(x)}{P(X \geq a)} &\text{for } x
 \[
   f_{X|Y}(x) = \frac{f_{X,Y}(x, y)}{f_Y(y)}.
 \]
-  
+
+
+
+
+\newpage 
+
+## Lecture 7
+
+### Continuous Independence:
+
+- As per usual, in the continuous case we replace probabilities for densities
+- Two continuous RVs $X$ and $Y$ are independent if \[f_{X,Y}(x, y) = f_X(x) \cdot f_Y(y) \quad \forall_{x,y}\qquad(1)\]
+- Equivalently: \[
+  f_{Y \mid X}(y) = f_Y(y) \quad \forall_{x,y}\qquad(2)
+\]
+
+
+
+- Intuitively, $(1)$ means that when slicing the joint density at various points along the $x$-axis or $y$-axis, the resulting 1-D function will be the same, up to some multiplication factor.
+- e.g $f_{X,Y}(1, y) = f_X(1) \cdot f_Y(y)$ and $f_{X,Y}(2, y) = f_x(2) \cdot f_Y(y)$
+- This means that all the slices along an axis will have the same shape
+- Note that $f_{X,Y}(1,y)$ is **not** a PDF. The conditional PDF is \[
+  f_{Y \mid X = 1}(y) = \frac{f_{X,Y}(1,y)}{f_X(1)} = f_Y(y),
+\] which also follows directly from $(2)$.
+
+
+### Direction of Dependence
+
+- Contour plots are useful for determining if two RVs are dependent or not
+- They also help determine the direction of dependence
+- For two positively correlated variables, there is overall tendency of the contour lines to point up and to the right 
+- For two negatively correlated variables, there is overall tendency of the contour lines to point down and to the right 
+
+
+
+### Estimating the marginal distribution from the conditional:
+
+- By the law of total probability, we have 
+\[
+f_Y(y) = \int_x f_{X,Y}(x,y)\ \text{d}x = \int_x f_{Y\mid X}(y)\ f_X(x)\ \text{d}x.\]
+
+- This is equivalent to 
+\[
+f_Y(y) = \E_X [f_{Y\mid X}(y)].\]
+
+- If we know the conditional densities and have a sample of $X$ as observed values $x_1, \ldots, x_n$, then we can empirically estimate \[
+  f_Y(y) \approx \frac{1}{n} \sum_{i = 1}^n f_{Y\mid X_i}(y).
+\]
+
+
+- Similarly, for CDFs we have
+\[
+  F_Y(y) = \int_x F_{Y \mid X}(y)\ f_X(x) \ \text{d}x = \E_X[F_{Y\mid X}(y)].
+\]
+- And we can estimate the CDF empirically with 
+\[
+  F_Y(y) \approx \frac{1}{n}\sum_{i = 1}^n F_{Y\mid X_i}(y).
+\]
+
+
+### Estimating the marginal mean from the conditional:
+
+- As in the discrete case, we have 
+\[
+  \mathbb{E}(Y) = \int_x m(x) \ f_{X}(x) \ \text{d}x = \mathbb{E}_X[\mathbb{E}_Y(Y \mid X = x)].
+\]
+- Let $m(x) = \mathbb{E}(Y \mid X = x)$. Then the above becomes \[
+  \mathbb{E}(Y) = \E[m(X)]
+\]
+- In machine learning, a function like $m(x)$ is called a **model function**.
+- When you fit a model using Supervised Learning, you usually end up with an estimate of m(x).
+- Then, using the empirical mean, we have
+\[
+E(Y) \approx \frac{1}{n} \sum_{i=1}^n m(x_i).\]
+
+
+### Estimating marginal quantiles from the conditional:
+
+- Unfortunately, if you have the $p$-quantile of Y given X = x, then this does not give much info about the $p$-quantile of $Y$.
+- This is because the average of quantiles is a horrible estimate for quantiles
+- e.g. a mean of medians is a horrible estimate for the median.
+- So we could calculate the $p$-quantile of $Y$ as an average using the same ideas as above, but the estimate would be almost worthless.
+
+
+### Mutivariate Gaussian Distribution:
+
+- A multivariate distribution family in which:
+1. All RVs must have Gaussian marginals
+2. All linear combinations of the marginals are Gaussian (called **Gaussian dependence**)
+
+\
+
+- In general, it has two parameters:
+1. A mean vector, $\vec{\mu}$
+2. A covariance matrix, $\boldsymbol{\Sigma}$
+
+- $\vec{\mu}$ is just a vector of the marginal means.
+- e.g. in the bivariate case we have \[
+  \vec{\mu}=\begin{pmatrix} \mu_X \\ \mu_Y \end{pmatrix}
+\]
+
+\
+
+- $\boldsymbol{\Sigma}$ is a symmetric matrix of marginal covariances, where the diagonal entries are the marginal variances.
+- It is symmetric because $\cov(X,Y) = \cov(Y,X)$
+- The diagonal entries are the marginal variances because $\cov(X, X) = \var(X)$.
+
+\
+
+- We can also look at a correlation matrix, $\boldsymbol{P}$
+- Recall that \[
+\rho_{XY} = \frac{\operatorname{Cov}(X, Y)}{\sqrt{\operatorname{Var}(X)\operatorname{Var}(Y)}} = \frac{\sigma_{XY}}{\sqrt{\sigma_X^2 \sigma_Y^2}}.\]
+- This implies that $\rho_{XX} = 1$.
+- Thus in the bivariate case the correlation matrix is 
+\begin{align*}
+\mathbf{P} &= \begin{pmatrix} \rho_{XX} & \rho_{XY} \\ \rho_{XY} & \rho_{YY} \end{pmatrix} \\
+&= \begin{pmatrix} 1 & \rho_{XY} \\ \rho_{XY} & 1 \end{pmatrix}.
+\end{align*}
+- Note that the covariance matrix is always used in the parameterization of a multivariate Gaussian distribution, although the correlation matrix has other uses (e.g PCA)
+
+- The above means that to fully specify a $d$-dimensional Gaussian distribution, we need:
+- the means and variances of all $d$ random variables, and
+- the $d \choose 2$ covariance or correlations between each pair of random variables
+
+\
+
+#### Properties of the Mutivariate Gaussian Distribution:
+
+- For the multivariate Gaussian distribution, uncorrelated marginals implies independent marginals.
+
+\
+
+- Marginal distributions are Gaussian, by definition.
+- The marginal distribution of a subset of variables can be obtained by just taking the relevant subset of means, and the relevant subset of the covariance matrix.
+
+\
+
+
+- Linear combinations of marginals are Gaussian, by definition.
+- If we want to find the mean and variance of a linear combination, we apply the rules for expectation and variance of linear combinations:
+\[
+  \E[aX + bY] = a\E[X] + b\E[Y]
+\] and
+\[
+\operatorname{Var}(aX + bY) = a^2\operatorname{Var}(X) + b^2\operatorname{Var}(Y) + 2ab\operatorname{Cov}(X, Y).
+\]
+
+- In the case of a multivariate Gaussian distribution this yields
+\[
+  \E[aX + bY] = a\mu_X + b\mu_Y
+\] and
+\[
+\operatorname{Var}(aX + bY) = a^2\sigma_X^2 + b^2\sigma_Y^2 + 2ab\sigma_{XY}.
+\]
+
+- In the case of the variance for linear combinations of $n\geq 3$ marginals, the formula will need to include all pairwise covariances.
+
+
+\ 
+
+- Conditional distributions are Gaussian.
+- If (X, Y) have a bivariate Gaussian distribution then the distribution of $Y$ given that $X = x$ is also Gaussian. 
+- Its mean is 
+\[
+  \mu_{_{Y \mid X = x}} = \mu_Y + \frac{\sigma_Y}{\sigma_X} \rho_{XY} (x - \mu_X).
+\]
+- Its variance is 
+\[
+  \sigma^2_{_{Y \mid X = x}} = \ (1 - \rho_{XY}^2)\sigma_Y^2 .
+\]
+- The conditional mean is linear in $x$, passes through the mean $(\mu_X, \mu_Y)$, and has a steeper slope with higher correlation.
+- The conditional variance is smaller than the marginal variance, and gets smaller with higher correlation. (But it does not depend on $x$)
+
