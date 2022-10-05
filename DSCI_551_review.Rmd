@@ -585,5 +585,151 @@ S_X(x)=1-F_X(x)
 ## Lecture 6
 
 
+### Uniform Distribution:
+
+\[
+X \sim \operatorname{Uniform}(a, b).
+\]
+
+- Has uniform density between $a$ and $b$, where $a<b$. 
+-PDF: 
+\[
+  f_X(x\mid a, b) = \frac{1}{b - a} \qquad \text{for} \quad a \leq x \leq b.
+\]
 
 
+
+### Gaussian (Normal) Distribution:
+\[X \sim \mathcal N(\mu, \sigma^2).\]
+
+- $\mu$ is the mean, $\sigma^2$ is the variance
+- Follows a "bell-shaped" curve
+- PDF: 
+\[
+f_X(x \mid \mu, \sigma^2) = \frac{1}{\sqrt{2\pi \sigma^2}} \exp \left[-\frac{(x - \mu)^2}{2\sigma^2} \right] \qquad \text{for} \quad -\infty < x < \infty.
+\]
+
+
+### Log-Normal Distribution:
+\[X \sim \operatorname{Log-Normal}(\mu, \sigma^2).\]
+
+- A random variable X is a Log-Normal distribution if the transformation $\ln(X)$ is Normal.
+- Can't take the logarithm of a negative number, so must have $X\geq 0$.
+- This means that 
+\[
+  \ln(X) \sim \mathcal N(\mu, \sigma^2)
+\]
+- PDF: 
+\[ f_X(x \mid \mu, \sigma^2) = \frac{1}{x\sqrt{2\pi \sigma^2}} \exp \left\{ -\frac{[\log(x) - \mu]^2}{2\sigma^2} \right\} \qquad \text{for} \quad x \geq 0.
+\]
+
+
+### Exponential Distribution:
+\[X \sim \operatorname{Exponential}(\lambda).\]
+
+- The exponential family is for positive random variables, often interpreted as wait time for some event to happen.
+
+- Characterized by a memoryless property, where after waiting for a certain period of time, the remaining wait time has the same distribution.
+
+- Parameterized by the average rate $\lambda >0$ at which events happen.
+
+- PDF: 
+\[f_X(x \mid \lambda) = \lambda e^{-\lambda x} \qquad \text{for} \quad x \geq 0.\]
+
+
+
+### Beta Distribution:
+\[X \sim \operatorname{Beta}(\alpha, \beta).\]
+
+- The Beta family of distributions is defined for random variables taking values between  0  and  1 , so is useful for modelling the distribution of proportions.
+- Has the Uniform distribution as a special case.
+- PDF: 
+\[
+f_X(x \mid \alpha, \beta) = \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha) \Gamma(\beta)} x^{\alpha - 1} (1 - x)^{\beta - 1} \qquad \text{for} \quad 0 \leq x \leq 1.
+\]
+
+
+### Weibull Distribution:
+\[X \sim \operatorname{Weibull}(\lambda, k).\]
+
+
+- A generalization of the Exponential family, which allows for an event to be more likely the longer you wait.
+- characterized by two parameters, a scale parameter $\lambda > 0$ and a shape parameter $k > 0$ (where $k = 1$ results in the Exponential family).
+- PDF: 
+\[
+f_X(x \mid \lambda, k) = \frac{k}{\lambda} \left( \frac{x}{\lambda} \right)^{k - 1} \exp^{-(x / \lambda)^k} \qquad \text{for} \quad x \geq 0.
+\]
+
+
+
+### Gamma Distribution:
+\[X \sim \operatorname{Gamma}(k, \theta).\]
+
+
+- A two-parameter distribution family with support on non-negative numbers.
+- PDF: 
+\[
+f_X(x \mid k, \theta) = \frac{1}{\Gamma(k) \theta^k} x^{k - 1} \exp(-x / \theta) \qquad \text{for} \quad x \geq 0.
+\]
+
+
+
+### Relevant `R` Functions:
+
+- Always take the form `<x><dist>`
+
+\
+
+- `<x>` is one of `d`, `p`, `q`, or `r`: 
+- `d`: density function (PDF), i.e. $f_X(x)$
+- `p`: cumulative distribution function (CDF), i.e. $F_X(x)$
+- `q`: quantile function (inverse of CDF), i.e. $Q_{_X}(p)$
+- `r`: random number generator.
+
+\
+
+- `<dist>` is an abbreviation of a distribution family
+- Some abbreviations for `<dist>`:
+- `unif`: Uniform (continuous).
+- `norm`: Normal (continuous).
+- `lnorm`: Log-Normal (continuous).
+- `geom`: Geometric (discrete).
+- `pois`: Poisson (discrete).
+- `binom`: Binomial (discrete).
+
+
+
+
+
+### Continuous Conditional Distributions:
+
+
+- In the continuous world, we replace probabilities with densities.
+
+- For example, if $X$ is continuous then
+\[P(X = x \mid X \geq 2500) = \frac{P(X = x)}{P(X \geq 2500)}
+\] is not a useful calculation, since $P(X = x) = 0$.
+- Instead, we calculate the conditional density of $X$: 
+\[
+f_{X \mid X \geq 2500}(x) = \begin{cases} \frac{f_X(x)}{P(X \geq 2500)} &\text{for } x \geq 2500,\\
+0 &\text{for } x < 2500\end{cases}.\]
+- In general,
+\[
+f_{X \mid X \geq a}(x) = \begin{cases} \frac{f_X(x)}{P(X \geq a)} &\text{for } x \geq a,\\
+0 &\text{for } x < a \end{cases}.\]
+
+
+\
+
+
+- Similarly, if $Y$ is continuous then
+\[P(X = x \mid Y = 5) = \frac{P(X = x)}{P(Y = 5)}
+\] is not a useful calculation, since $P(Y = 5) = 0$.
+- Instead, we calculate \[
+  f_{X|Y = 5}(x) = \frac{f_{X,Y}(x, 5)}{f_Y(5)}.
+\]
+- In general, 
+\[
+  f_{X|Y}(x) = \frac{f_{X,Y}(x, y)}{f_Y(y)}.
+\]
+  
