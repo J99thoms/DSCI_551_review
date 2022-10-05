@@ -2,7 +2,10 @@
 title: "DSCI 551 Review"
 author: "Jakob Thoms"
 date: "2022-10-04"
-output: pdf_document
+output: 
+  pdf_document:
+    toc: yes
+    toc_depth: '4'
 ---
 
 ```{r setup, include=FALSE}
@@ -46,6 +49,7 @@ knitr::opts_chunk$set(echo = TRUE)
 \newcommand\rcp[1]{ \frac{1}{#1} }
 
 
+\newpage
 
 ## Lecture 1
 
